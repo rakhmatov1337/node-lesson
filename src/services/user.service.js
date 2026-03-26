@@ -39,12 +39,6 @@ export const getUserById = async (id) => {
 export const createUser = async (data) => {
 	const { name, email, age, userImage } = data
 
-	if (!name || !email) {
-		const error = new Error("Name and email required")
-		error.statusCode = 400
-		throw error
-	}
-
 	const existingUser = await userRepository.findUserByEmail(email)
 
 	if (existingUser) {
