@@ -1,5 +1,23 @@
 import * as userService from "../services/user.service.js"
 
+export const register = async (req, res, next) => {
+	try {
+		const result = await userService.register(req.body)
+		res.status(201).json(result)
+	} catch (error) {
+		next(error)
+	}
+}
+
+export const login = async (req, res, next) => {
+	try {
+		const result = await userService.login(req.body)
+		res.json(result)
+	} catch (error) {
+		next(error)
+	}
+}
+
 export const getUsers = async (req, res, next) => {
 	try {
 		const users = await userService.getAllUsers(req.query)
@@ -53,3 +71,4 @@ export const deleteUser = async (req, res, next) => {
 		next(error)
 	}
 }
+
