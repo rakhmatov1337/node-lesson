@@ -1,23 +1,24 @@
-import User from "../models/user.model.js"
+import { pool } from "../config/db.js";
 
-export const findAllUsers = async (filters, page, limit) => {
-	const skip = (page - 1) * limit
-
-	return User.find(filters).skip(skip).limit(limit)
-}
+export const findAllUsers = async () => {
+	const result = await pool.query("SELECT * FROM users ORDER BY id DESC");
+	return result.rows;
+};
 
 export const findUserById = async (id) => {
-	return User.findById(id)
-}
+	const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+	return result.rows[0];
+};
 
-export const findUserByEmail = async (email) => {
-	return User.findOne({ email })
-}
-
-export const createUser = async (data) => {
-	return User.create(data)
-}
+export const createUser = async ({ name, email, age }) => {
+	const result = await pool.query(
+		"INSERT INTO users (name, email, age) VALUES ($1, $2, $3) RETURNING *",
+		[name, email, age],
+	);
+	return result.rows[0];
+};
 
 export const deleteUserById = async (id) => {
-	return User.findByIdAndDelete(id)
-}
+	const result = await pool.query("DELETE FROM users WHERE id = $1 RETURNING *", [id]);
+	return result.rows[0];
+};
