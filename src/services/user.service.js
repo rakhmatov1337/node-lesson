@@ -1,69 +1,41 @@
-import * as userRepository from "../repositories/user.repository.js"
-import mongoose from "mongoose"
+import * as userRepository from "../repositories/user.repository.js";
 
-export const getAllUsers = async (query) => {
-	const filters = {}
+export const getUsers = async () => {
+	return userRepository.findAllUsers();
+};
 
-	if (query.age) {
-		filters.age = query.age
-	}
-
-	if (query.name) {
-		filters.name = query.name
-	}
-
-	const page = parseInt(query.page, 10) || 1
-	const limit = parseInt(query.limit, 10) || 10
-
-	return userRepository.findAllUsers(filters, page, limit)
-}
-
-export const getUserById = async (id) => {
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		const error = new Error("Invalid user ID format")
-		error.statusCode = 400
-		throw error
-	}
-
-	const user = await userRepository.findUserById(id)
+export const getUser = async (id) => {
+	const user = await userRepository.findUserById(id);
 
 	if (!user) {
-		const error = new Error("User not found")
-		error.statusCode = 404
-		throw error
+		const error = new Error("User not found");
+		error.statusCode = 404;
+		throw error;
 	}
 
-	return user
-}
+	return user;
+};
 
 export const createUser = async (data) => {
-	const { name, email, age, userImage } = data
+	const { name, email, age } = data;
 
-	const existingUser = await userRepository.findUserByEmail(email)
-
-	if (existingUser) {
-		const error = new Error("Email already exists")
-		error.statusCode = 400
-		throw error
+	if (!name || !email) {
+		const error = new Error("Name and email are required");
+		error.statusCode = 400;
+		throw error;
 	}
 
-	return userRepository.createUser({ name, email, age, userImage })
-}
+	return userRepository.createUser({ name, email, age });
+};
 
 export const deleteUser = async (id) => {
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		const error = new Error("Invalid user ID format")
-		error.statusCode = 400
-		throw error
-	}
-
-	const deletedUser = await userRepository.deleteUserById(id)
+	const deletedUser = await userRepository.deleteUserById(id);
 
 	if (!deletedUser) {
-		const error = new Error("User not found")
-		error.statusCode = 404
-		throw error
+		const error = new Error("User not found");
+		error.statusCode = 404;
+		throw error;
 	}
 
-	return deletedUser
-}
+	return deletedUser;
+};
