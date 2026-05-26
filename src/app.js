@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes.js";
 import { AppDataSource } from "./config/data-source.js";
+
+import { startBot } from "./bot/bot.js";
 dotenv.config();
 
 const app = express();
@@ -18,6 +20,8 @@ app.use((err, req, res, next) => {
 // 2. SHUNDAN KEYINGINA HTTP serverni ishga tushiramiz.
 await AppDataSource.initialize();
 console.log("Postgres TypeORM orqali ulandi");
+
+startBot()
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

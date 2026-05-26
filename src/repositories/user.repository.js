@@ -23,3 +23,23 @@ export const deleteUserById = async (id) => {
   await userRepo.remove(user); // DELETE ... va o'chirilgan qatorni qaytaradi
   return user;
 };
+
+
+export const findUserByTelegramChatId = async (telegramChatId) => {
+  return userRepo.findOneBy({ telegramChatId: String(telegramChatId) });
+};
+
+export const findAllUserChatId = async () => {
+  return userRepo.find({ order: { telegramChatId: "DESC" } });
+}
+
+export const createUserFromBot = async ({ name, email, telegramChatId }) => {
+  const user = userRepo.create({
+    name,
+    email,
+    telegramChatId: String(telegramChatId), // bigint -> string saqlanadi
+    password: "telegram-user", // bot userlari uchun placeholder
+    role: "user",
+  });
+  return userRepo.save(user);
+};

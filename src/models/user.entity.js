@@ -37,6 +37,13 @@ export const UserEntity = new EntitySchema({
       length: 20,
       default: "user",
     },
+
+    telegramChatId: {
+      type: "bigint",
+      nullable: true,
+      unique: true,
+    },
+    
     createdAt: {
       type: "timestamp",
       createDate: true,
