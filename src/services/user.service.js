@@ -17,15 +17,15 @@ export const getUser = async (id) => {
 };
 
 export const createUser = async (data) => {
-	const { name, email, age } = data;
+	const { name, email, age, password, role } = data;
 
-	if (!name || !email) {
-		const error = new Error("Name and email are required");
+	if (!name && !email && !password) {
+		const error = new Error("Name, email and password are required");
 		error.statusCode = 400;
 		throw error;
 	}
 
-	return userRepository.createUser({ name, email, age });
+	return userRepository.createUser({ name, email, age, role, password });
 };
 
 export const deleteUser = async (id) => {
